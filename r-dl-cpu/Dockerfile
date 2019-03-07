@@ -46,6 +46,7 @@ RUN wget https://github.com/lakshayg/tensorflow-build/releases/download/tf1.12.0
     R -e "install.packages(c('shinydashboard', 'leaflet','leaflet.extras','ggmap','shinyWidgets','htmlwidgets','htmltools'), repos='http://cran.rstudio.com/')" && \
     R -e "install.packages(c('fastrtext','KableExtra', 'pander', 'ggpubr'), repos='http://cran.rstudio.com/')" && \
     R -e "install.packages(c('tidyverse','shinyjs', 'Matrix.utils','arulesViz','threejs', 'tibbletime'), repos='http://cran.rstudio.com/')" && \
+    R -e "install.packages(c('corrplot','earth', 'adabag','randomForest','ROCR','pscl','timeDate'), repos='ht$
     R -e "install.packages('h2o', repos=(c('http://s3.amazonaws.com/h2o-release/h2o/master/1497/R', getOption('repos'))))"\
     R -e "devtools::install_url('https://github.com/catboost/catboost/releases/download/v0.11.1/catboost-R-Linux-0.11.1.tgz', args = c('--no-multiarch'))" && \
     R -e "devtools::install_github('ropenscilabs/icon')" && \   
