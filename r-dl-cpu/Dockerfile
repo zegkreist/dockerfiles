@@ -46,7 +46,7 @@ RUN wget https://github.com/lakshayg/tensorflow-build/releases/download/tf1.12.0
     R -e "install.packages(c('shinydashboard', 'leaflet','leaflet.extras','ggmap','shinyWidgets','htmlwidgets','htmltools'), repos='http://cran.rstudio.com/')" && \
     R -e "install.packages(c('fastrtext','KableExtra', 'pander', 'ggpubr'), repos='http://cran.rstudio.com/')" && \
     R -e "install.packages(c('tidyverse','shinyjs', 'Matrix.utils','arulesViz','threejs', 'tibbletime'), repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages(c('corrplot','earth', 'adabag','randomForest','ROCR','pscl','timeDate'),  repos='http://cran.rstudio.com/')" && \
+    R -e "install.packages(c('corrplot','earth', 'adabag','randomForest','ROCR','pscl','timeDate', 'testthat'),  repos='http://cran.rstudio.com/')" && \
     R -e "install.packages('h2o', repos=(c('http://s3.amazonaws.com/h2o-release/h2o/master/1497/R', getOption('repos'))))"\
     R -e "devtools::install_url('https://github.com/catboost/catboost/releases/download/v0.11.1/catboost-R-Linux-0.11.1.tgz', args = c('--no-multiarch'))" && \
     R -e "devtools::install_github('ropenscilabs/icon')" && \   
@@ -70,6 +70,29 @@ RUN mkdir tmp_xgboost \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
+
+
+RUN apt-get update \
+    && apt-get install -y cmake \ 
+    && R -e "install.packages(c('roxygen2'), repos='http://cran.rstudio.com/')"  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+
+RUN mkdir tmp_lightgbm \
+    && cd tmp_lightgbm \
+    && git clone --recursive https://github.com/Microsoft/LightGBM \
+    && cd LightGBM \
+    && Rscript build_r.R \
+    && cd .. \
+    && cd .. \
+    && rm -rf tmp_lightgbm \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+
 
  EXPOSE 8787
 
