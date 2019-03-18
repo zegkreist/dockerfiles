@@ -10,6 +10,7 @@ RUN apt-get update \
     libpng-dev \
     libxml2-dev \
     libjpeg-dev \
+    unixodbc-dev \
 #    libgcc \
     mariadb-client \
     libmariadbclient-dev \
@@ -36,7 +37,7 @@ RUN wget https://github.com/lakshayg/tensorflow-build/releases/download/tf1.12.0
     && rm -rf /tmp/*
 
 
- RUN R -e "install.packages(c('Rcpp', 'tensorflow', 'keras', 'dplyr'), repos='http://cran.rstudio.com/')" && \
+ RUN R -e "install.packages(c('Rcpp','odbc', 'tensorflow', 'keras', 'dplyr'), repos='http://cran.rstudio.com/')" && \
     R -e "install.packages(c('stringr', 'lubridate', 'ggplto2'), repos='http://cran.rstudio.com/')" && \
     R -e "install.packages(c('data.table', 'RMariaDB','DBI'), repos='http://cran.rstudio.com/')" && \
     R -e "install.packages(c('keras', 'FactoMineR', 'moments'), repos='http://cran.rstudio.com/')" && \
