@@ -105,6 +105,10 @@ RUN TEMP_DEB="$(mktemp)" \
     && yes | dpkg --skip-same-version -i "$TEMP_DEB" \
     && rm -f "$TEMP_DEB"
    
+RUN R -e "install.packages(c('bsts'), repos='http://cran.rstudio.com/')" && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/* && \
+    rm -rf /tmp/*
 
 
 
