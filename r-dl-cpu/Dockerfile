@@ -93,6 +93,19 @@ RUN mkdir tmp_lightgbm \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
+RUN apt-get update \
+    && apt-get install unixodbc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+
+RUN TEMP_DEB="$(mktemp)" \
+    && wget -O "$TEMP_DEB" 'https://packages.microsoft.com/debian/9/prod/pool/main/m/msodbcsql17/msodbcsql17_17.2.0.1-1_amd64.deb' \
+    && yes | dpkg --skip-same-version -i "$TEMP_DEB" \
+    && rm -f "$TEMP_DEB"
+   
+
 
 
  EXPOSE 8787
