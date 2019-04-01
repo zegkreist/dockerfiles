@@ -44,6 +44,7 @@ RUN apt-get update \
     && R -e "devtools::install_github('JimMcL/JUtils')"  \
     && R -e "install.packages(c('roxygen2'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('bsts'), repos='http://cran.rstudio.com/')"  \
+    && R -e "devtools::install_github('larmarange/JLutils')" \
     && mkdir tmp_xgboost \ 
     && cd tmp_xgboost \
     && git clone --recursive https://github.com/dmlc/xgboost \
@@ -69,9 +70,17 @@ RUN apt-get update \
     && rm -rf /tmp/*
 
 
-
-
  EXPOSE 8787
+
+
+
+ RUN apt-get update \
+    && apt-get install -y libtiff5-dev libgmp3-dev \
+    && R -e "install.packages(c('ClusterR'),  repos='http://cran.rstudio.com/')"  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
 
 
  CMD ["/init"]
