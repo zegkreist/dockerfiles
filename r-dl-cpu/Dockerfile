@@ -76,7 +76,7 @@ RUN apt-get update \
 
  RUN apt-get update \
     && apt-get install -y libtiff5-dev libgmp3-dev \
-    && R -e "install.packages(c('ClusterR'),  repos='http://cran.rstudio.com/')"  \
+    && R -e "install.packages(c('ClusterR', 'survminer', 'kableExtra', 'ggridges', 'forecast'),  repos='http://cran.rstudio.com/')"  \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
