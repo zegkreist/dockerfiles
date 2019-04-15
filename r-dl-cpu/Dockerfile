@@ -28,15 +28,15 @@ RUN apt-get update \
     && python -m pip install keras \
     && rm -f tensorflow-1.12.0-cp27-cp27mu-linux_x86_64.whl \
     && R -e "install.packages(c('Rcpp','odbc', 'tensorflow', 'keras', 'dplyr'), repos='http://cran.rstudio.com/')"  \ 
-    && R -e "install.packages(c('stringr', 'lubridate', 'ggplto2'), repos='http://cran.rstudio.com/')"  \
+    && R -e "install.packages(c('stringr','matrixStats' ,'lubridate', 'ggplto2'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('data.table', 'RMariaDB','DBI'), repos='http://cran.rstudio.com/')"  \
-    && R -e "install.packages(c('keras', 'FactoMineR', 'moments'), repos='http://cran.rstudio.com/')"  \
+    && R -e "install.packages(c('FactoMineR', 'moments'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('rmarkdown', 'formattable', 'plotly'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('flexdashboard', 'DT', 'knitr', 'blogdown'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('devtools','arules','hmeasure','caret','shiny','e1071'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('shinydashboard', 'leaflet','leaflet.extras','ggmap','shinyWidgets','htmlwidgets','htmltools'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('fastrtext','KableExtra', 'pander', 'ggpubr'), repos='http://cran.rstudio.com/')"  \
-    && R -e "install.packages(c('tidyverse','shinyjs', 'Matrix.utils','arulesViz','threejs', 'tibbletime'), repos='http://cran.rstudio.com/')"  \
+    && R -e "install.packages(c('tidyverse','shinyjs','arulesViz','threejs', 'tibbletime'), repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages(c('corrplot','earth', 'adabag','randomForest','ROCR','pscl','timeDate', 'testthat'),  repos='http://cran.rstudio.com/')"  \
     && R -e "install.packages('h2o', repos=(c('http://s3.amazonaws.com/h2o-release/h2o/master/1497/R', getOption('repos'))))"\
     && R -e "devtools::install_url('https://github.com/catboost/catboost/releases/download/v0.11.1/catboost-R-Linux-0.11.1.tgz', args = c('--no-multiarch'))"  \
