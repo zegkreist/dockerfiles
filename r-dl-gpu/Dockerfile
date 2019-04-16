@@ -18,13 +18,6 @@ RUN cd /usr/local/src && mkdir lightgbm && cd lightgbm && \
 
 FROM rocker/tensorflow-gpu:3.5.2
 
-# Python Xgboost for CPU
-#RUN pip3 install \
-#    wheel==0.33.0 \
-#    setuptools==40.8.0 \
-#    scipy==1.2.1 \
-#    tensorflow-probability==0.5.0 --upgrade
-
 #RUN apt-get update && apt-get -y install wget && \
 #  wget https://s3-us-west-2.amazonaws.com/xgboost-wheels/xgboost-0.81-py2.py3-none-manylinux1_x86_64.whl && \
 #  pip3 install  xgboost-0.81-py2.py3-none-manylinux1_x86_64.whl && \
@@ -43,9 +36,11 @@ COPY --from=0 /usr/local/lib/R/site-library/xgboost /usr/local/lib/R/site-librar
    # && sed -i '3s/.*/use_gpu <- T/' R-package/src/install.libs.R \
    # && Rscript build_r.R
 
+
+
 # Get Java (for h2o R package)
 RUN apt-get update -qq && \
-    apt-get -y --no-install-recommends install \
+    apt-get -y --no-install-recommends install  python3-pip\
       default-jdk \
       default-jre && \
     R CMD javareconf \
@@ -57,17 +52,66 @@ RUN apt-get update -qq && \
 ## h2o requires Java
 RUN install2.r h2o greta
 
+
+
+ARG BUILDDIR="/tmp/build"
+ARG PYTHON_VER="3.6.8"
+WORKDIR ${BUILDDIR}
+
+RUN apt-get update -qq && \
+apt-get upgrade -y  > /dev/null 2>&1 && \
+apt-get install wget gcc make zlib1g-dev -y -qq > /dev/null 2>&1 && \
+wget --quiet https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz > /dev/null 2>&1 && \
+tar zxf Python-${PYTHON_VER}.tgz && \
+cd Python-${PYTHON_VER} && \
+./configure  > /dev/null 2>&1 && \
+make > /dev/null 2>&1 && \
+make install > /dev/null 2>&1 && \
+rm -rf ${BUILDDIR} \
+&& update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.6 10\
+&& update-alternatives --config python3
+
+
+# Python Xgboost for CPU
+RUN wget https://bootstrap.pypa.io/get-pip.py \
+    && python3 get-pip.py \
+    && python3 -m install \
+    wheel==0.33.0 \
+    setuptools==40.8.0 \
+    scipy==1.2.1 \
+    tensorflow-probability==0.5.0 --upgrade
+
+
+
 RUN mkdir tmp_h2o \
     && cd tmp_h2o \
-    && wget https://s3.amazonaws.com/h2o-release/h2o4gpu/releases/stable/ai/h2o/h2o4gpu/0.3-cuda9/h2o4gpu-0.3.1.10000-cp36-cp36m-linux_ppc64le.whl \
-    && pip install h2o4gpu-0.3.1.10000-cp36-cp36m-linux_ppc64le.whl\
+    && wget https://s3.amazonaws.com/h2o-release/h2o4gpu/releases/stable/ai/h2o/h2o4gpu/0.3-cuda9/h2o4gpu-0.3.1.10000-cp36-cp36m-linux_x86_64.whl \
+    && pip3 install h2o4gpu-0.3.1.10000-cp36-cp36m-linux_x86_64.whl\
     && cd .. \
     && rm -rf tmp_h2o \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
-RUN install2.r h2o4gpu \
+RUN cd .. && cd .. && cd .. \
+    && install2.r reticulate h2o4gpu \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
+
+
+RUN pip3 install \
+    h5py==2.9.0 \
+    pyyaml==3.13 \
+    requests==2.21.0 \
+    Pillow==5.4.1 \
+    tensorflow-gpu==1.12.0 \
+    keras==2.2.4 \
+    --no-cache-dir \
+  && install2.r keras
+
+RUN chmod 777 /usr
+
+
+RUN echo "\nTENSORFLOW_PYTHON=/usr/local/bin/python3.6 \n RETICULATE_PYTHON=/usr/local/bin/python3.6 \n" >>   /usr/local/lib/R/etc/Renviron
+
