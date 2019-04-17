@@ -1,0 +1,21 @@
+version: '2'
+services:
+  r-dl-cpu_navarro:
+    image: zegkreist/r-dl-cpu
+    container_name: r-dl-cpu_navarro
+    restart: always
+    environment:
+     - USER=$USER
+     - USERID=1001
+     - PASSWORD=superpassword
+    ports:
+     - "8787:8787"
+    volumes:
+     - /home/$USER/folder:/home/$USER/folder:rw   # Not tested
+
+
+
+
+
+
+
