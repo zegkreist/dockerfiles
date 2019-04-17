@@ -18,27 +18,12 @@ RUN cd /usr/local/src && mkdir lightgbm && cd lightgbm && \
 
 FROM rocker/tensorflow-gpu:3.5.2
 
-#RUN apt-get update && apt-get -y install wget && \
-#  wget https://s3-us-west-2.amazonaws.com/xgboost-wheels/xgboost-0.81-py2.py3-none-manylinux1_x86_64.whl && \
-#  pip3 install  xgboost-0.81-py2.py3-none-manylinux1_x86_64.whl && \
-#  rm xgboost-0.81-py2.py3-none-manylinux1_x86_64.whl && \
-#  apt-get remove --purge -y wget && \
-#  rm -rf /var/lib/apt/lists/*
 
 COPY --from=0 /usr/local/lib/R/site-library/xgboost /usr/local/lib/R/site-library/xgboost
 
-#COPY --from=0 /usr/local/lib/R/site-library/lightgbm /usr/local/lib/R/site-library/lightgbm
-
-#RUN apt-get update && apt-get install -y --no-install-recommends cmake \
-#    ocl-icd-libopencl1 ocl-icd-opencl-dev libboost-dev libboost-system-dev libboost-filesystem-dev \
- #   && git clone --recursive https://github.com/Microsoft/LightGBM \
-  #  && cd LightGBM \
-   # && sed -i '3s/.*/use_gpu <- T/' R-package/src/install.libs.R \
-   # && Rscript build_r.R
 
 
 
-# Get Java (for h2o R package)
 RUN apt-get update -qq && \
     apt-get -y --no-install-recommends install  python3-pip\
       default-jdk \
@@ -49,7 +34,6 @@ RUN apt-get update -qq && \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
-## h2o requires Java
 RUN install2.r h2o greta
 
 
@@ -66,17 +50,22 @@ RUN apt-get update -qq  \
     && wget --quiet https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz > /dev/null 2>&1  \
     && tar zxf Python-${PYTHON_VER}.tgz  \
     && cd Python-${PYTHON_VER}  \
-    && ./configure --with-ensurepip=install --enable-optimizations --enable-shared --prefix=/usr  \
+    && ./configure --with-ensurepip=install --enable-optimizations --enable-shared   \
     && make > /dev/null 2>&1  \
     && make install > /dev/null 2>&1  \
-    && rm -rf ${BUILDDIR} \
+    && rm -rf ${BUILDDIR} 
+
+
 
 
 RUN rm /usr/bin/lsb_release
 
-RUN ln -s /usr/lib/libpython3.6.so.1.0 /usr/lib64/libpython3.6.so.1.0 \
-#export LD_LIBRARY_PATH=/usr/lib/libpython3.6*:$LD_LIBRARY_PATH \
-#    && export PATH=/usr/bin/python3.6:$PATH \
+
+
+
+RUN ln -s  /usr/local/lib/libpython3.6m.so.1.0  /usr/lib/libpython3.6m.so.1.0 \
+    && export LD_LIBRARY_PATH=/usr/local/lib/libpython3.6m.so.1.0:$LD_LIBRARY_PATH \
+    && export PATH=/usr/local/bin/python3.6:$PATH \
     && update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.6 60\
     && update-alternatives --config python3
 
@@ -116,10 +105,12 @@ RUN python3 -m pip install \
     tensorflow-gpu==1.12.0 \
     keras==2.2.4 \
     --no-cache-dir \
-  && install2.r keras
+   && install2.r keras
 
 RUN chmod 777 /usr
 
-
 RUN echo "\nTENSORFLOW_PYTHON=/usr/local/bin/python3.6 \n RETICULATE_PYTHON=/usr/local/bin/python3.6 \n" >>   /usr/local/lib/R/etc/Renviron
+
+
+RUN install2.r data.table dplyr ggplot2 ClusterR
 
