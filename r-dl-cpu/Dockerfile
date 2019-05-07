@@ -81,6 +81,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
-
+RUN install2.r DescTools
 
  CMD ["/init"]

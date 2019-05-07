@@ -114,3 +114,5 @@ RUN echo "\nTENSORFLOW_PYTHON=/usr/local/bin/python3.6 \n RETICULATE_PYTHON=/usr
 
 RUN install2.r data.table dplyr ggplot2 ClusterR
 
+RUN install2.r caret ROCR e1071 fastrtext
+
