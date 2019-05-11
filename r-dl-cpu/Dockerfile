@@ -83,4 +83,10 @@ RUN apt-get update \
 
 RUN install2.r DescTools
 
+RUN apt-get update \
+    && apt-get install -y libudunits2-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
  CMD ["/init"]

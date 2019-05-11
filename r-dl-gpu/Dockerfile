@@ -116,3 +116,13 @@ RUN install2.r data.table dplyr ggplot2 ClusterR
 
 RUN install2.r caret ROCR e1071 fastrtext
 
+
+RUN apt-get update \
+    && apt-get install -y libudunits2-dev libgdal-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+RUN install2.r DescTools DALEX
+
+
