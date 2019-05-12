@@ -84,9 +84,12 @@ RUN apt-get update \
 RUN install2.r DescTools
 
 RUN apt-get update \
-    && apt-get install -y libudunits2-dev \
+    && apt-get install -y libudunits2-dev libgdal-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
+
+RUN install2.r DALEX mlrMBO smoof DiceKriging rgenoud lhs ParamHelpers
+
 
  CMD ["/init"]
