@@ -22,7 +22,7 @@ echo "
 version: '2.3'
 services:
   r-dl-cpu_navarro:
-    image: zegkreist/r-dl-cpu
+    image: zegkreist/r-dl-cpu:latest
     container_name: r-dl-cpu-navarro
     restart: always
     environment:
