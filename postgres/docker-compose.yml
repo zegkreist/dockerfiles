@@ -1,0 +1,27 @@
+
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "australopithecus"
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/nrosa/dados/PostgreSQL:/var/lib/postgresql/data 
+#    networks:
+#      - postgres-compose-network
+      
+  teste-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "nrosa@nrosa"
+      PGADMIN_DEFAULT_PASSWORD: "australopithecus"
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+#    networks:
+#      - postgres-compose-network
+

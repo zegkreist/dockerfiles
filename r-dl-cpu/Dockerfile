@@ -89,7 +89,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
-RUN install2.r DALEX mlrMBO smoof DiceKriging rgenoud lhs ParamHelpers
+RUN install2.r DALEX mlrMBO smoof DiceKriging rgenoud lhs ParamHelpers  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
 
 
 
@@ -100,7 +103,10 @@ RUN install2.r DALEX mlrMBO smoof DiceKriging rgenoud lhs ParamHelpers
 
 RUN R -e "webshot::install_phantomjs()" \
     && mv /root/bin/phantomjs /usr/bin/phantomjs \
-    && chmod a+rx /usr/bin/phantomjs
+    && chmod a+rx /usr/bin/phantomjs  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
 
 ## Add LaTeX, rticles and bookdown support
 RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
@@ -156,11 +162,23 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
   && chmod -R g+w /opt/TinyTeX \
   && chmod -R g+wx /opt/TinyTeX/bin \
   && echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron \
-  && install2.r --error PKI 
+  && install2.r --error PKI   \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
 
-RUN install2.r Matrix.utils
+RUN install2.r Matrix.utils  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
 
 RUN R -e "install.packages(c('webshot'), repos='http://cran.rstudio.com/');devtools::install_github('zegkreist/magikaRp')"  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+
+RUN R -e "devtools::install_github('wesm/feather/R')"  \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
