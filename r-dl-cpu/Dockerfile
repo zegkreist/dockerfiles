@@ -183,6 +183,19 @@ RUN R -e "devtools::install_github('wesm/feather/R')"  \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
+RUN R -e "devtools::install_github('yixuan/prettydoc')"  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+
+RUN echo "#!/usr/bin/with-contenv bash     \   
+\n env >> /usr/local/lib/R/etc/Renviron \  
+\n## load /etc/environment vars first:   \		  
+\n for line in $( cat /etc/environment ) ; do export $line ; done \          
+\n exec /usr/lib/rstudio-server/bin/rserver --server-daemonize 0" > /etc/services.d/rstudio/run
+
+
 
 
  CMD ["/init"]
