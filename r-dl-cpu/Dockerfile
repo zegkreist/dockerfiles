@@ -196,6 +196,12 @@ RUN echo "#!/usr/bin/with-contenv bash     \
 \n exec /usr/lib/rstudio-server/bin/rserver --server-daemonize 0" > /etc/services.d/rstudio/run
 
 
+RUN apt-get update \
+    && apt-get install -y mdbtools \
+    && apt-get clean \
+    && install2.r Hmisc \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
 
 
  CMD ["/init"]
