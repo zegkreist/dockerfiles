@@ -203,5 +203,15 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
+RUN apt-get update \
+    && apt-get install -y \
+     groff \
+#   && pip install --upgrade pip \
+    && pip  install --upgrade awscli \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/* \
+    && rm -rf /.cache/*
+
 
  CMD ["/init"]
