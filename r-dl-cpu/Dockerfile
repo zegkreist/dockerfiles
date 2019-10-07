@@ -203,6 +203,24 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
+
+
+RUN apt-get update \
+    && apt-get install -y cmake flex bison make clang \
+    && git clone --branch apache-arrow-0.15.0 https://github.com/apache/arrow/ \
+    && cd arrow/cpp \
+    && mkdir release \
+    && cd release \
+    && cmake .. \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DARROW_BOOST_USE_SHARED:BOOL=Off \
+      -DARROW_PARQUET=ON \
+    && make \
+    && make install
+
+RUN  R -e 'devtools::install_github("apache/arrow/r",ref = "apache-arrow-0.15.0")'
+
+
 RUN apt-get update \
     && apt-get install -y \
      groff \
@@ -214,4 +232,20 @@ RUN apt-get update \
     && rm -rf /.cache/*
 
 
+RUN install2.r blogdown \
+    && apt-get update \
+    && R -e "options(blogdown.hugo.dir = '/usr/local/bin'); blogdown::install_hugo()" \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+RUN mkdir /adds
+RUN R -e "install.packages(c('rJava', 'RJDBC'), repos='http://cran.rstudio.com/')"  \
+    && wget -P '/adds/' 'https://athena-downloads.s3.amazonaws.com/drivers/JDBC/SimbaAthenaJDBC_2.0.9/AthenaJDBC41_2.0.9.jar' \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
+
  CMD ["/init"]
+
