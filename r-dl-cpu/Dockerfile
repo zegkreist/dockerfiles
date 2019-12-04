@@ -246,6 +246,14 @@ RUN R -e "install.packages(c('rJava', 'RJDBC'), repos='http://cran.rstudio.com/'
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
+#hiredis-devel centos
+RUN apt-get  update \
+    && apt-get install -y libhiredis-dev \
+    && R -e "install.packages(c('redux'), repos='http://cran.rstudio.com/')"  \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
+
 
  CMD ["/init"]
 
