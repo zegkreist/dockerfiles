@@ -24,3 +24,17 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
+
+
+RUN apt-get update \
+    && apt-get install -y cmake flex bison make clang \
+    && git clone --branch apache-arrow-0.15.0 https://github.com/apache/arrow/ \
+    && cd arrow/cpp \
+    && mkdir release \
+    && cd release \
+    && cmake .. \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DARROW_BOOST_USE_SHARED:BOOL=Off \
+      -DARROW_PARQUET=ON \
+    && make \
+    && make install
