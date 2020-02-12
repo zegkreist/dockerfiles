@@ -19,7 +19,7 @@ RUN python3 -m pip install \
 RUN apt-get update \
     && apt-get install -y \
      groff \
-    && python3 pip install --upgrade awscli \
+    && python3 -m pip install --upgrade awscli \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
