@@ -38,3 +38,10 @@ RUN apt-get update \
       -DARROW_PARQUET=ON \
     && make \
     && make install
+
+
+
+RUN  R -e 'devtools::install_github("apache/arrow/r",ref = "apache-arrow-0.15.0")' \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/* \
+    && rm -rf /.cache/*
