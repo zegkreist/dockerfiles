@@ -8,3 +8,9 @@ RUN apt-get update \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
+
+## INSTALL KERAS
+RUN python3 -m pip install \
+    h5py==2.9.0 \
+    keras==2.2.4 \
+    --no-cache-dir
