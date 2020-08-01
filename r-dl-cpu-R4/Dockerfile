@@ -1,6 +1,5 @@
 FROM rocker/r-ver:4.0.0
 
-RUN /rocker_scripts/install_rstudio.sh daily
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends apt-utils \
@@ -19,13 +18,12 @@ RUN apt-get update \
     unixodbc-dev \
     mariadb-client \
     libmariadbclient-dev \
-    libmariadb-client-lgpl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
-RUN install2. Rcpp odbc tensorflow keras dplyr stringi stringr \
+RUN install2.r Rcpp odbc tensorflow keras dplyr stringi stringr \
     matrixStats lubridate ggplot2 data.table FactoMineR  DBI \
     moments shiny knitr rmarkdown formattable plotly flexdashboard DT \
     blogdown devtools arules hmeasure e1071 shinydashboard \
@@ -51,14 +49,14 @@ RUN R -e "devtools::install_github('ropenscilabs/icon')"  \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
-RUN install2.r xgboost LightGBM ClusterR survminer ggridges forecast DescTools \
+RUN install2.r xgboost ClusterR survminer ggridges forecast DescTools \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
 RUN apt-get update \
-    && apt-get install -y libudunits2-dev libgdal-dev \
+    && apt-get install -y libudunits2-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
@@ -69,21 +67,17 @@ RUN install2.r DALEX smoof mlr DiceKriging rgenoud lhs ParamHelpers  mlrMBO \
     && rm -rf /tmp/*
 
 
-RUN R -e "webshot::install_phantomjs()" \
-    && mv /root/bin/phantomjs /usr/bin/phantomjs \
-    && chmod a+rx /usr/bin/phantomjs  \
+
+RUN install2.r Matrix.utils rJava RJDBC optparse tryCatchLog R.utils futile.logger\
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
-RUN install2.r Matrix.utils webshot rJava RJDBC \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/* \
-    && rm -rf /tmp/*
+
 
 
 RUN apt-get  update \
-    && apt-get install -y libhiredis-dev \
+    && apt-get install -y libhiredis-dev zlib1g-dev wget \
     && install2.r redux \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
@@ -165,15 +159,35 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
 
 
 
-RUN echo "#!/usr/bin/with-contenv bash     \   
-\n env >> /usr/local/lib/R/etc/Renviron \  
-\n## load /etc/environment vars first:   \		  
-\n for line in $( cat /etc/environment ) ; do export $line ; done \          
-\n exec /usr/lib/rstudio-server/bin/rserver --server-daemonize 0" > /etc/services.d/rstudio/run
+#RUN echo "#!/usr/bin/with-contenv bash     \   
+#\n env >> /usr/local/lib/R/etc/Renviron \  
+#\n## load /etc/environment vars first:   \		  
+#\n for line in $( cat /etc/environment ) ; do export $line ; done \          
+#\n exec /usr/lib/rstudio-server/bin/rserver --server-daemonize 0" > /etc/services.d/rstudio/run
 
 
 
+ENV S6_VERSION=v1.21.7.0
+ENV RSTUDIO_VERSION=daily
+ENV PATH=/usr/lib/rstudio-server/bin:$PATH
 
+RUN apt-get update \
+    && apt-get install -y  libpq5 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/* \
+    && rm -rf /.cache/*
+
+RUN /rocker_scripts/install_rstudio.sh 
+
+RUN cd /tmp \
+    && wget https://download.jetbrains.com/fonts/JetBrainsMono-1.0.0.zip \
+    && unzip JetBrainsMono-1.0.0.zip  \
+    && mkdir /etc/rstudio/fonts/JetBrainsMono \
+    && mv JetBrainsMono-*.ttf /etc/rstudio/fonts/JetBrainsMono/\
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/*
 
 
  CMD ["/init"]
