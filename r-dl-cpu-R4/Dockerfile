@@ -183,6 +183,13 @@ RUN apt-get update \
 
 RUN /rocker_scripts/install_rstudio.sh 
 
+ARG LIBARROW_MINIMAL=false
+RUN R -e 'install.packages("arrow", repos = "https://dl.bintray.com/ursalabs/arrow-r")'\
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/* \
+    && rm -rf /.cache/*
+
 RUN cd /tmp \
     && wget https://download.jetbrains.com/fonts/JetBrainsMono-1.0.0.zip \
     && unzip JetBrainsMono-1.0.0.zip  \
