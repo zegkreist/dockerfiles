@@ -192,6 +192,46 @@ RUN cd /tmp \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
+RUN echo '{ \n \
+    "show_indent_guides": true,             \n \
+    "highlight_r_function_calls": true,     \n \
+    "rainbow_parentheses": true,            \n \
+    "syntax_color_console": true,           \n \
+    "font_size_points": 10,                 \n \
+    "editor_theme": "Monokai",              \n \
+    "server_editor_font_enabled": true,     \n \
+    "server_editor_font": "JetBrainsMono",  \n \
+    "panes": {                              \n \
+        "quadrants": [                      \n \
+            "Source",                       \n \
+            "TabSet1",                      \n \
+            "Console",                      \n \
+            "TabSet2"                       \n \
+        ],                                  \n \
+        "tabSet1": [                        \n \
+            "Environment",                  \n \
+            "History",                      \n \
+            "Connections",                  \n \
+            "Build",                        \n \
+            "VCS",                          \n \
+            "Tutorial",                     \n \
+            "Presentation"                  \n \
+        ],                                  \n \
+        "tabSet2": [                        \n \
+            "Files",                        \n \
+            "Plots",                        \n \
+            "Packages",                     \n \
+            "Help",                         \n \
+            "Viewer"                        \n \
+        ],                                  \n \
+        "hiddenTabSet": [],                 \n \
+        "console_left_on_top": false,       \n \
+        "console_right_on_top": true,       \n \
+        "additional_source_columns": 0      \n \
+    },                                      \n \
+    "zotero_connection_type": "web",        \n \
+    "posix_terminal_shell": "bash"          \n \
+}' > /etc/rstudio/rstudio-prefs.json
 
  CMD ["/init"]
 
