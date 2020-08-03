@@ -159,11 +159,14 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
 
 
 
-#RUN echo "#!/usr/bin/with-contenv bash     \   
-#\n env >> /usr/local/lib/R/etc/Renviron \  
-#\n## load /etc/environment vars first:   \		  
-#\n for line in $( cat /etc/environment ) ; do export $line ; done \          
-#\n exec /usr/lib/rstudio-server/bin/rserver --server-daemonize 0" > /etc/services.d/rstudio/run
+
+RUN apt-get update \
+    && apt-get install -y libgsl-dev \
+    && install2.r ridge reactable xlsx readxl\
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/* \
+    && rm -rf /.cache/*
 
 
 
