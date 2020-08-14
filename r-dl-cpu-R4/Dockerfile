@@ -1,4 +1,4 @@
-FROM rocker/r-ver:4.0.0
+FROM rocker/r-ver:4.0.2
 
 
 RUN apt-get update \
@@ -24,7 +24,7 @@ RUN apt-get update \
     && rm -rf /.cache/*
 
 RUN install2.r Rcpp odbc tensorflow keras dplyr stringi stringr \
-    matrixStats lubridate ggplot2 data.table FactoMineR  DBI \
+    matrixStats lubridate ggplot2 FactoMineR  DBI \
     moments shiny knitr rmarkdown formattable plotly flexdashboard DT \
     blogdown devtools arules hmeasure e1071 shinydashboard \
     && apt-get clean \
@@ -32,6 +32,14 @@ RUN install2.r Rcpp odbc tensorflow keras dplyr stringi stringr \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
     
+RUN  apt-get update -y \
+     && apt-get install -y zlib1g-dev pkg-config \
+     && install2.r data.table stringi \
+     && apt-get clean \
+     && rm -rf /var/lib/apt/* \
+     && rm -rf /tmp/* \
+     && rm -rf /.cache/*
+     
 RUN install2.r leaflet leaflet.extras ggmap shinyWidgets htmltools htmlwidgets \
     fastrtext KableExtra pander ggpubr shinyjs arulesViz threejs tibbletime \
     corrplot earth adabag randomForest ROCR pscl timeDate testthat \
@@ -76,8 +84,9 @@ RUN install2.r Matrix.utils rJava RJDBC optparse tryCatchLog R.utils futile.logg
 
 
 
+
 RUN apt-get  update \
-    && apt-get install -y libhiredis-dev zlib1g-dev wget \
+    && apt-get install -y libhiredis-dev wget \
     && install2.r redux \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
@@ -189,6 +198,8 @@ RUN R -e 'install.packages("arrow", repos = "https://dl.bintray.com/ursalabs/arr
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
+
+
 
 RUN cd /tmp \
     && wget https://download.jetbrains.com/fonts/JetBrainsMono-1.0.0.zip \
