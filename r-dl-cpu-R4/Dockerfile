@@ -1,4 +1,4 @@
-FROM rocker/r-ver:4.0.2
+FROM rocker/r-ver:4.1.0
 
 
 RUN apt-get update \
@@ -171,7 +171,7 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
 
 RUN apt-get update \
     && apt-get install -y libgsl-dev \
-    && install2.r ridge reactable xlsx readxl\
+    && install2.r ridge reactable xlsx readxl rugarch htmlTable\
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
@@ -193,12 +193,11 @@ RUN apt-get update \
 RUN /rocker_scripts/install_rstudio.sh 
 
 ARG LIBARROW_MINIMAL=false
-RUN R -e 'install.packages("arrow", repos = "https://dl.bintray.com/ursalabs/arrow-r")'\
+RUN R -e 'install.packages("arrow")'\
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
-
 
 
 RUN cd /tmp \
