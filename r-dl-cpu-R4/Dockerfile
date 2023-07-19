@@ -1,4 +1,4 @@
-FROM rocker/r-ver:4.1.0
+FROM rocker/r-ver:4.2.0
 
 
 RUN apt-get update \
@@ -23,7 +23,7 @@ RUN apt-get update \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
-RUN install2.r Rcpp odbc tensorflow keras dplyr stringi stringr \
+RUN install2.r --skipinstalled -n 5 Rcpp odbc tensorflow keras dplyr stringi stringr \
     matrixStats lubridate ggplot2 FactoMineR  DBI \
     moments shiny knitr rmarkdown formattable plotly flexdashboard DT \
     blogdown devtools arules hmeasure e1071 shinydashboard \
@@ -40,7 +40,7 @@ RUN  apt-get update -y \
      && rm -rf /tmp/* \
      && rm -rf /.cache/*
      
-RUN install2.r leaflet leaflet.extras ggmap shinyWidgets htmltools htmlwidgets \
+RUN install2.r --skipinstalled -n 5 leaflet leaflet.extras ggmap shinyWidgets htmltools htmlwidgets \
     fastrtext KableExtra pander ggpubr shinyjs arulesViz threejs tibbletime \
     corrplot earth adabag randomForest ROCR pscl timeDate testthat \
     h2o catboost roxygen2 bsts \
@@ -49,34 +49,34 @@ RUN install2.r leaflet leaflet.extras ggmap shinyWidgets htmltools htmlwidgets \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
-RUN R -e "devtools::install_github('ropenscilabs/icon')"  \   
-    && R -e "devtools::install_github('JimMcL/JUtils')"  \
-    && R -e "devtools::install_github('larmarange/JLutils')" \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/* \
-    && rm -rf /tmp/* \
-    && rm -rf /.cache/*
+# RUN R -e "devtools::install_github('ropenscilabs/icon')"  \   
+#     && R -e "devtools::install_github('JimMcL/JUtils')"  \
+#     && R -e "devtools::install_github('larmarange/JLutils')" \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/* \
+#     && rm -rf /tmp/* \
+#     && rm -rf /.cache/*
 
-RUN install2.r xgboost ClusterR survminer ggridges forecast DescTools \
+RUN install2.r --skipinstalled xgboost ClusterR survminer ggridges forecast DescTools \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
 RUN apt-get update \
-    && apt-get install -y libudunits2-dev \
+    && apt-get install -y libudunits2-dev tk-dev\
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
-RUN install2.r DALEX smoof mlr DiceKriging rgenoud lhs ParamHelpers  mlrMBO \
+RUN install2.r --skipinstalled  DALEX smoof mlr DiceKriging rgenoud lhs ParamHelpers  mlrMBO \
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
 
 
-RUN install2.r Matrix.utils rJava RJDBC optparse tryCatchLog R.utils futile.logger\
+RUN install2.r --skipinstalled  Matrix.utils rJava RJDBC optparse tryCatchLog R.utils futile.logger\
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
@@ -106,13 +106,9 @@ RUN install2.r blogdown \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/*
 
-
-## Add LaTeX, rticles and bookdown support
-RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
-  && dpkg -i texlive-local.deb \
-  && rm texlive-local.deb \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends \
+    
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
     ## for rJava
     default-jdk \
     ## Nice Google fonts
@@ -144,43 +140,60 @@ RUN wget "https://travis-bin.yihui.name/texlive-local.deb" \
     libzmq3-dev \
     libopenmpi-dev \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/ \
-  ## Use tinytex for LaTeX installation
-  && install2.r --error tinytex \
-  ## Admin-based install of TinyTeX:
-  && wget -qO- \
-    "https://github.com/yihui/tinytex/raw/master/tools/install-unx.sh" | \
-    sh -s - --admin --no-path \
-  && mv ~/.TinyTeX /opt/TinyTeX \
-  && /opt/TinyTeX/bin/*/tlmgr path add \
-  && tlmgr install metafont mfware inconsolata tex ae parskip listings \
-  && tlmgr path add \
-  && Rscript -e "tinytex::r_texmf()" \
-  && chown -R root:staff /opt/TinyTeX \
-  && chown -R root:staff /usr/local/lib/R/site-library \
-  && chmod -R g+w /opt/TinyTeX \
-  && chmod -R g+wx /opt/TinyTeX/bin \
-  && echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron \
-  && install2.r --error PKI   \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/* \
-    && rm -rf /tmp/*
-
+  && rm -rf /var/lib/apt/lists/ 
 
 
 
 RUN apt-get update \
     && apt-get install -y libgsl-dev \
-    && install2.r ridge reactable xlsx readxl rugarch htmlTable\
+    && install2.r --skipinstalled ridge reactable xlsx readxl rugarch htmlTable\
+    && apt-get clean \
+    && rm -rf /var/lib/apt/* \
+    && rm -rf /tmp/* \
+    && rm -rf /.cache/*
+
+ARG LIBARROW_MINIMAL=false
+RUN R -e 'install.packages("arrow")'\
     && apt-get clean \
     && rm -rf /var/lib/apt/* \
     && rm -rf /tmp/* \
     && rm -rf /.cache/*
 
 
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+                ghostscript \
+                lmodern \
+                pandoc-citeproc \
+                qpdf \
+                r-cran-formatr \
+                r-cran-ggplot2 \
+                r-cran-knitr \
+		r-cran-rmarkdown \
+                r-cran-runit \
+                r-cran-testthat \
+                texinfo \
+                texlive-fonts-extra \
+                texlive-fonts-recommended \
+                texlive-latex-extra \
+                texlive-latex-recommended \
+                texlive-luatex \
+                texlive-plain-generic \
+                texlive-science \
+                texlive-xetex 
+
+
+RUN /rocker_scripts/install_pandoc.sh \
+    && /rocker_scripts/install_quarto.sh
+
+
+#RUN quarto install tool tinytex
+#RUN quarto tools info tinytex
+
+
 
 ENV S6_VERSION=v1.21.7.0
-ENV RSTUDIO_VERSION=daily
+ENV RSTUDIO_VERSION=latest
 ENV PATH=/usr/lib/rstudio-server/bin:$PATH
 
 RUN apt-get update \
@@ -192,12 +205,7 @@ RUN apt-get update \
 
 RUN /rocker_scripts/install_rstudio.sh 
 
-ARG LIBARROW_MINIMAL=false
-RUN R -e 'install.packages("arrow")'\
-    && apt-get clean \
-    && rm -rf /var/lib/apt/* \
-    && rm -rf /tmp/* \
-    && rm -rf /.cache/*
+
 
 
 RUN cd /tmp \
@@ -251,4 +259,3 @@ RUN echo '{ \n \
 }' > /etc/rstudio/rstudio-prefs.json
 
  CMD ["/init"]
-
