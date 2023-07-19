@@ -2,6 +2,8 @@
 
 A melhor forma de utilizar esse serviço é subindo via docker-compose. Pois, assim, é possível ter o serviço sempre de "pé", mesmo que o computador seja reiniciado.
 
+ATENÇÃO: Essa é uma imagem GIGANTE, perto dos 11GB. Porém ela tem de tudo, até latex, hugo, pandoc, quarto.
+
 ## Uso
 
 Para facilitar a construção do docker-compose eu criei um shell script, `docker-compose-generator.sh`.
